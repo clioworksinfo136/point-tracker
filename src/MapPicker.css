@@ -1,5 +1,5 @@
 .map-picker {
-  height: 400px;
+  height: 800px;
 }
 
 .map-picker > div {
@@ -28,6 +28,21 @@
 }
 
 /* ── Circle markers ── */
+/* Invisible, larger hit area so the tiny circle is easy to click. */
+.map-marker-hit {
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+}
+
+.map-marker-hit .map-marker-circle {
+  transform: none; /* centered by the hit-area flexbox instead */
+}
+
 .map-marker-circle {
   border-radius: 50%;
   border-style: solid;

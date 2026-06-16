@@ -9,6 +9,7 @@ const schema = a.schema({
       lng: a.float().required(),
       lat: a.float().required(),
       description: a.string(),
+      photos: a.string().array(),
     })
     .authorization((allow) => [allow.authenticated()]),
 });

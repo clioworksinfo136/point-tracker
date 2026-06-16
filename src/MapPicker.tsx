@@ -23,15 +23,16 @@ interface MapPickerProps {
   lng: string;
   points: PointMarker[];
   onCoordChange: (lat: string, lng: string) => void;
+  onPointSelect?: (id: string) => void;
 }
 
 /** Scale marker diameter relative to the default zoom so circles grow/shrink with the view. */
 function markerSize(zoom: number): number {
-  const size = 20 * Math.pow(2, zoom - DEFAULT_ZOOM);
-  return Math.max(6, Math.min(60, size));   // clamp between 6px and 60px
+  const size = 2 * Math.pow(2, zoom - DEFAULT_ZOOM);
+  return Math.max(1, Math.min(20, size));   // 2px at default zoom (clamp 1px–20px)
 }
 
-export default function MapPicker({ lat, lng, points, onCoordChange }: MapPickerProps) {
+export default function MapPicker({ lat, lng, points, onCoordChange, onPointSelect }: MapPickerProps) {
   const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY as string;
 
   const [zoom, setZoom] = useState(DEFAULT_ZOOM);
@@ -103,16 +104,22 @@ export default function MapPicker({ lat, lng, points, onCoordChange }: MapPicker
           onCameraChanged={handleCameraChange}
         >
           {points.map((p) => (
-            <AdvancedMarker key={p.id} position={{ lat: p.lat, lng: p.lng }}>
-              <div
-                className="map-marker-circle"
-                title={p.location ?? ""}
-                style={{
-                  width: savedSize,
-                  height: savedSize,
-                  borderWidth: Math.max(2, savedSize / 6),
-                }}
-              />
+            <AdvancedMarker
+              key={p.id}
+              position={{ lat: p.lat, lng: p.lng }}
+              clickable
+              onClick={() => onPointSelect?.(p.id)}
+            >
+              <div className="map-marker-hit" title={p.location ?? ""}>
+                <div
+                  className="map-marker-circle"
+                  style={{
+                    width: savedSize,
+                    height: savedSize,
+                    borderWidth: savedSize * 0.1,
+                  }}
+                />
+              </div>
             </AdvancedMarker>
           ))}
 
@@ -123,7 +130,7 @@ export default function MapPicker({ lat, lng, points, onCoordChange }: MapPicker
                 style={{
                   width: draftSize,
                   height: draftSize,
-                  borderWidth: Math.max(2, draftSize / 6),
+                  borderWidth: draftSize * 0.1,
                 }}
               />
             </AdvancedMarker>

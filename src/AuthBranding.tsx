@@ -12,7 +12,18 @@ export const authComponents = {
           src="/bai-engineers-logo.png"
           alt="Bai Engineers"
           className="auth-brand-logo"
+          onError={(e) => {
+            // If the logo file isn't present yet, show a text wordmark instead
+            // of a broken-image icon.
+            e.currentTarget.style.display = "none";
+            const fallback = e.currentTarget
+              .nextElementSibling as HTMLElement | null;
+            if (fallback) fallback.style.display = "block";
+          }}
         />
+        <span className="auth-brand-wordmark" style={{ display: "none" }}>
+          BAI ENGINEERS
+        </span>
       </div>
     );
   },

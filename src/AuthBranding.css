@@ -1,7 +1,37 @@
+/* ── Light-purple login window ── */
+[data-amplify-authenticator] {
+  /* page area behind the card */
+  background-color: #ede1f7;
+  min-height: 100vh;
+  padding: 2rem 1rem;
+
+  /* the login card itself */
+  --amplify-components-authenticator-router-background-color: #f7f0fc;
+  --amplify-components-authenticator-router-border-color: #d9c2ec;
+  --amplify-components-authenticator-modal-background-color: #ede1f7;
+
+  /* brand-purple accents for buttons, links and tabs */
+  --amplify-components-button-primary-background-color: #8e1a8e;
+  --amplify-components-button-primary-hover-background-color: #761576;
+  --amplify-components-button-primary-focus-background-color: #761576;
+  --amplify-components-button-primary-active-background-color: #5f115f;
+  --amplify-components-button-link-color: #8e1a8e;
+  --amplify-components-tabs-item-active-color: #8e1a8e;
+  --amplify-components-tabs-item-active-border-color: #8e1a8e;
+  --amplify-components-tabs-item-focus-color: #8e1a8e;
+}
+
 .auth-brand-header {
   display: flex;
   justify-content: center;
   padding: 1.5rem 1rem 0.5rem;
+}
+
+.auth-brand-wordmark {
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #8e1a8e;
 }
 
 .auth-brand-logo {
