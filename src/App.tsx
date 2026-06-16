@@ -1,6 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import { generateClient } from "aws-amplify/data";
 import type { Schema } from "../amplify/data/resource";
+import MapPicker from "./MapPicker";
+import type { PointMarker } from "./MapPicker";
 import "./App.css";
 
 const client = generateClient<Schema>();
@@ -45,6 +47,15 @@ function App() {
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     setForm({ ...form, [e.target.name]: e.target.value });
   }
+
+  const pointMarkers: PointMarker[] = useMemo(
+    () => points.map((p) => ({ id: p.id, lat: p.lat, lng: p.lng, location: p.location })),
+    [points]
+  );
+
+  const handleCoordChange = useCallback((lat: string, lng: string) => {
+    setForm((prev) => ({ ...prev, lat, lng }));
+  }, []);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -190,6 +201,15 @@ function App() {
               )}
             </div>
           </form>
+        </section>
+
+        <section className="map-section">
+          <MapPicker
+            lat={form.lat}
+            lng={form.lng}
+            points={pointMarkers}
+            onCoordChange={handleCoordChange}
+          />
         </section>
 
         <section className="list-section">

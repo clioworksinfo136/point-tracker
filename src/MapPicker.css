@@ -1,0 +1,50 @@
+.map-picker {
+  height: 400px;
+}
+
+.map-picker > div {
+  height: 100%;
+  width: 100%;
+}
+
+.map-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  background: #f9fafb;
+  color: #6b7280;
+  text-align: center;
+  padding: 1.5rem;
+}
+
+.map-placeholder pre {
+  background: #e5e7eb;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  margin: 0.5rem 0;
+  font-size: 0.85rem;
+}
+
+/* ── Circle markers ── */
+.map-marker-circle {
+  border-radius: 50%;
+  border-style: solid;
+  border-color: #1b6ca8;
+  background: transparent;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+/* Draft (unsaved) marker: lighter, pulsing */
+.map-marker-draft {
+  border-color: #3b82f6;
+  background: rgba(59, 130, 246, 0.15);
+  animation: marker-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes marker-pulse {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  50%      { transform: translate(-50%, -50%) scale(1.3); }
+}

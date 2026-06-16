@@ -61,6 +61,15 @@
   box-shadow: 0 0 0 3px rgba(27, 108, 168, 0.15);
 }
 
+/* ── Map ── */
+.map-section {
+  margin-bottom: 2rem;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* ── shared row/actions ── */
 .form-row {
   display: flex;
   gap: 1rem;
