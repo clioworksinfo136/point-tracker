@@ -1,12 +1,30 @@
-import { useState, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import {
   APIProvider,
   Map,
   AdvancedMarker,
+  useMap,
   MapCameraChangedEvent,
   MapMouseEvent,
 } from "@vis.gl/react-google-maps";
 import "./MapPicker.css";
+
+export interface FocusTarget {
+  lat: number;
+  lng: number;
+  nonce: number; // changes each request so repeated clicks re-trigger
+}
+
+/** Pans/zooms the map whenever `target` changes. Must render inside <Map>. */
+function MapFocuser({ target }: { target: FocusTarget | null }) {
+  const map = useMap();
+  useEffect(() => {
+    if (!map || !target) return;
+    map.panTo({ lat: target.lat, lng: target.lng });
+    map.setZoom(20);
+  }, [map, target]);
+  return null;
+}
 
 const BENT_NM = { lat: 33.1581, lng: -105.8572 };
 const DEFAULT_ZOOM = 14;
@@ -24,6 +42,7 @@ interface MapPickerProps {
   points: PointMarker[];
   onCoordChange: (lat: string, lng: string) => void;
   onPointSelect?: (id: string) => void;
+  focusTarget?: FocusTarget | null;
 }
 
 /** Scale marker diameter relative to the default zoom so circles grow/shrink with the view. */
@@ -32,7 +51,7 @@ function markerSize(zoom: number): number {
   return Math.max(1, Math.min(20, size));   // 2px at default zoom (clamp 1px–20px)
 }
 
-export default function MapPicker({ lat, lng, points, onCoordChange, onPointSelect }: MapPickerProps) {
+export default function MapPicker({ lat, lng, points, onCoordChange, onPointSelect, focusTarget }: MapPickerProps) {
   const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY as string;
 
   const [zoom, setZoom] = useState(DEFAULT_ZOOM);
@@ -103,6 +122,7 @@ export default function MapPicker({ lat, lng, points, onCoordChange, onPointSele
           onClick={handleMapClick}
           onCameraChanged={handleCameraChange}
         >
+          <MapFocuser target={focusTarget ?? null} />
           {points.map((p) => (
             <AdvancedMarker
               key={p.id}

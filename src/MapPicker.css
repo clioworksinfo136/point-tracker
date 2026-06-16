@@ -46,8 +46,8 @@
 .map-marker-circle {
   border-radius: 50%;
   border-style: solid;
-  border-color: #1b6ca8;
-  background: transparent;
+  border-color: #b91c1c;
+  background: #e11d48;
   transform: translate(-50%, -50%);
   pointer-events: none;
 }

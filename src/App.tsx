@@ -4,7 +4,7 @@ import { generateClient } from "aws-amplify/data";
 import { uploadData, getUrl, remove } from "aws-amplify/storage";
 import type { Schema } from "../amplify/data/resource";
 import MapPicker from "./MapPicker";
-import type { PointMarker } from "./MapPicker";
+import type { PointMarker, FocusTarget } from "./MapPicker";
 import "./App.css";
 
 const client = generateClient<Schema>();
@@ -33,6 +33,11 @@ function App() {
   const [form, setForm] = useState<PointFormData>(emptyForm);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [focusTarget, setFocusTarget] = useState<FocusTarget | null>(null);
+
+  function zoomToPoint(p: { lat: number; lng: number }) {
+    setFocusTarget({ lat: p.lat, lng: p.lng, nonce: Date.now() });
+  }
 
   // ── Attribute editor (opened by clicking a point on the map) ──
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -369,6 +374,7 @@ function App() {
             points={pointMarkers}
             onCoordChange={handleCoordChange}
             onPointSelect={openDetail}
+            focusTarget={focusTarget}
           />
         </section>
 
@@ -388,11 +394,11 @@ function App() {
                     <span className="point-time">{p.time}</span>
                   </div>
                   <h3>{p.location}</h3>
-                  <p className="point-coords">
-                    {p.lat}, {p.lng}
-                  </p>
                   <p className="point-desc">{p.description}</p>
                   <div className="point-card-actions">
+                    <button className="btn btn-small btn-zoom" onClick={() => zoomToPoint(p)}>
+                      Zoom
+                    </button>
                     <button className="btn btn-small btn-edit" onClick={() => handleEdit(p)}>
                       Edit
                     </button>
