@@ -9,6 +9,11 @@ import "./App.css";
 
 const client = generateClient<Schema>();
 
+const VIDEO_RE = /\.(mp4|mov|webm|avi|mkv|m4v|ogv)$/i;
+function isVideoKey(key: string): boolean {
+  return VIDEO_RE.test(key);
+}
+
 interface PointFormData {
   date: string;
   time: string;
@@ -416,7 +421,18 @@ function App() {
       {selectedPoint && (
         <div className="attr-overlay" onClick={closeDetail}>
           <div className="attr-window" onClick={(e) => e.stopPropagation()}>
-            <h2>Point Details</h2>
+            <div className="attr-window-header">
+              <h2>Point Details</h2>
+              <button
+                type="button"
+                className="attr-close"
+                title="Close"
+                onClick={closeDetail}
+                disabled={busy}
+              >
+                ×
+              </button>
+            </div>
 
             <label>
               Date
@@ -465,12 +481,21 @@ function App() {
                 detailPhotos.map((key, index) => (
                   <div key={key} className="attr-photo">
                     {photoUrls[key] ? (
-                      <img
-                        src={photoUrls[key]}
-                        alt="Point"
-                        onClick={() => setLightboxIndex(index)}
-                        title="Click to enlarge"
-                      />
+                      isVideoKey(key) ? (
+                        <video
+                          src={photoUrls[key]}
+                          muted
+                          onClick={() => setLightboxIndex(index)}
+                          title="Click to enlarge"
+                        />
+                      ) : (
+                        <img
+                          src={photoUrls[key]}
+                          alt="Point"
+                          onClick={() => setLightboxIndex(index)}
+                          title="Click to enlarge"
+                        />
+                      )
                     ) : (
                       <span className="attr-photo-loading">Loading…</span>
                     )}
@@ -526,7 +551,7 @@ function App() {
             <input
               ref={photoInputRef}
               type="file"
-              accept="image/*"
+              accept="image/*,video/*"
               multiple
               hidden
               onChange={handlePhotosPicked}
@@ -545,7 +570,7 @@ function App() {
                 onClick={() => photoInputRef.current?.click()}
                 disabled={busy}
               >
-                Photo
+                Photo/Video
               </button>
               <button
                 className="btn btn-primary"
@@ -560,13 +585,6 @@ function App() {
                 disabled={busy}
               >
                 Delete
-              </button>
-              <button
-                className="btn btn-secondary"
-                onClick={closeDetail}
-                disabled={busy}
-              >
-                Cancel
               </button>
             </div>
           </div>
@@ -597,10 +615,18 @@ function App() {
           )}
 
           <div className="lightbox-content" onClick={(e) => e.stopPropagation()}>
-            <img
-              src={photoUrls[detailPhotos[lightboxIndex]]}
-              alt={`Photo ${lightboxIndex + 1}`}
-            />
+            {isVideoKey(detailPhotos[lightboxIndex]) ? (
+              <video
+                src={photoUrls[detailPhotos[lightboxIndex]]}
+                controls
+                autoPlay
+              />
+            ) : (
+              <img
+                src={photoUrls[detailPhotos[lightboxIndex]]}
+                alt={`Photo ${lightboxIndex + 1}`}
+              />
+            )}
             <div className="lightbox-bar">
               <span className="lightbox-counter">
                 {lightboxIndex + 1} / {detailPhotos.length}
